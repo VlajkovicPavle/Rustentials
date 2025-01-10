@@ -1,3 +1,4 @@
+mod core;
 mod ui;
 
 use ui::cli::run_cli;

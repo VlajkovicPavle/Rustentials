@@ -1,3 +1,4 @@
+use crate::core::authentification::authentificate_user;
 use clap::{Parser, Subcommand};
 
 /// Simple program to greet a person
@@ -20,6 +21,8 @@ enum Commands {
 pub fn run_cli() {
     let arguments = Cli::parse();
     match arguments.command {
-        Commands::Login { save } => {}
+        Commands::Login { save } => {
+            authentificate_user(save);
+        }
     }
 }
