@@ -1,3 +1,8 @@
+mod core;
+mod ui;
+
+use ui::cli::run_cli;
+
 fn main() {
-    println!("Hello, world!");
+    run_cli();
 }
