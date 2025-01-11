@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-async-std = "1.13.0"
+async-std = { version = "1.13.0", features = ["attributes"]}
 clap = { version = "4.5.26", features = ["derive"] }
 rpassword = "7.3.1"
-sqlx = "0.8.3"
+sqlx = { version = "0.8.3", features = ["runtime-async-std-native-tls","sqlite"]}
 
 
