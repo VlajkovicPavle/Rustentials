@@ -6,13 +6,13 @@ const DATABASE_URL: &str = "sqlite://rustentials.db";
 
 async fn create_database(db_url: &str) {
     Sqlite::create_database(db_url).await.unwrap();
-    match create_schema(&db_url).await {
+    match create_schema(db_url).await {
         Ok(_) => println!("Database created successfully!"),
         Err(e) => panic!("{}", e),
     }
 }
 async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Error> {
-    let pool = SqlitePool::connect(&db_url).await?;
+    let pool = SqlitePool::connect(db_url).await?;
     let db_schema: &str = &fetch_schema();
     let result = sqlx::query(db_schema).execute(&pool).await;
     pool.close().await;
