@@ -25,9 +25,4 @@ pub async fn fetch_db_instances() -> Result<SqlitePool, sqlx::Error> {
     }
     let instances = SqlitePool::connect(DATABASE_URL).await.unwrap();
     Ok(instances)
-
-    // let qry = "INSERT INTO settings (description) VALUES($1)";
-    // let result = sqlx::query(&qry).bind("testing").execute(&instances).await;
-    // instances.close().await;
-    // println!("{:?}", result);
 }
