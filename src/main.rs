@@ -5,4 +5,6 @@ mod ui;
 use ui::cli::run_cli;
 
 #[async_std::main]
-async fn main() {}
+async fn main() {
+    repository::services::insert_credentials().await;
+}

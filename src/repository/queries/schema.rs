@@ -1,19 +1,24 @@
-fn fetch_schema() -> String {
+fn fetch_schema_query() -> String {
     String::from(
-        "CREATE TABLE passwords (
-        id  INTEGERER PRIMARY KEY AUTOINCREMENT,
-        service_name    TEXT NOT NULL,       
-        username    TEXT NOT NULL,           
-        password    TEXT NOT NULL,           
-        url     TEXT,                         
-        notes   TEXT,                       
-        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE settings (
-        id  INTEGER PRIMARY KEY CHECK (id = 1), 
-        master_key_hash     TEXT NOT NULL,        
-        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
-    );",
+        "CREATE TABLE credentials (
+            id  INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL, service_name TEXT NOT NULL,
+            username    TEXT NOT NULL,           
+            password_hash   TEXT NOT NULL,           
+            email       TEXT NOT NULL,
+            url     TEXT,                         
+            notes   TEXT,                       
+            created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+         CREATE TABLE users (
+            id  INTEGER PRIMARY KEY AUTOINCREMENT,
+            username    TEXT NOT NULL UNIQUE,
+            password_hash   TEXT NOT NULL,
+            email   TEXT NOT NULL UNIQUE,
+            created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        ",
     )
 }
