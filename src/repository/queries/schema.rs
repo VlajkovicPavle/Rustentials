@@ -5,7 +5,6 @@ fn fetch_schema_query() -> String {
             user_id INTEGER NOT NULL, service_name TEXT NOT NULL,
             username    TEXT NOT NULL,           
             password_hash   TEXT NOT NULL,           
-            email       TEXT NOT NULL,
             url     TEXT,                         
             notes   TEXT,                       
             created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -16,7 +15,6 @@ fn fetch_schema_query() -> String {
             id  INTEGER PRIMARY KEY AUTOINCREMENT,
             username    TEXT NOT NULL UNIQUE,
             password_hash   TEXT NOT NULL,
-            email   TEXT NOT NULL UNIQUE,
             created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         ",

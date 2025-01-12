@@ -50,7 +50,7 @@ enum Commands {
     List {},
 }
 
-pub fn run_cli() {
+pub async fn run_cli() {
     let arguments = Cli::parse();
     match arguments.command {
         Commands::Register { username } => {
@@ -62,7 +62,7 @@ pub fn run_cli() {
                     One special character: !@#$%^&*(),.? 
                  "
             );
-            if !register::register_user(&username) {
+            if !register::register_user(&username).await {
                 println!("Either failed requirements or re-entering password");
                 println!("Failed to register!");
                 return;

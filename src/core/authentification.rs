@@ -10,15 +10,16 @@ pub fn validate_password(password: &str) -> bool {
     let uppercase_check = Regex::new(r"[A-Z]").unwrap();
     let lowercase_check = Regex::new(r"[a-z]").unwrap();
     let digit_check = Regex::new(r"[0-9]").unwrap();
-    let special = Regex::new(r"[!@#$%^&*(),.?]").unwrap();
+    let special_check = Regex::new(r"[!@#$%^&*(),.?]").unwrap();
 
     length_check
         && uppercase_check.is_match(password.as_bytes())
         && lowercase_check.is_match(password.as_bytes())
         && digit_check.is_match(password.as_bytes())
+        && special_check.is_match(password.as_bytes())
 }
 
-pub fn generate_master_password_hash(password: &str) {
+pub fn generate_master_password_hash(password: &str) -> String {
     let salt = SaltString::generate(OsRng);
     let argon2 = Argon2::default();
     let password_hash = argon2
@@ -27,4 +28,5 @@ pub fn generate_master_password_hash(password: &str) {
         .to_string();
     // println!("{}", PasswordHash::new(&password_hash).unwrap());
     // assert!(Argon2::default().verify_password(password, &parsed_hash).is_ok());
+    password_hash
 }

@@ -1,4 +1,5 @@
 mod core;
+mod models;
 mod repository;
 mod ui;
 
@@ -8,10 +9,11 @@ use core::authentification;
 
 use ui::cli::run_cli;
 
-// #[async_std::main]
-// async fn main() { repository::services::insert_credentials().await;
-// }
-//
-fn main() {
-    authentification::generate_master_password_hash("test!");
+#[async_std::main]
+async fn main() {
+    run_cli().await;
 }
+//
+// fn main() {
+//     authentification::generate_master_password_hash("test!");
+// }
