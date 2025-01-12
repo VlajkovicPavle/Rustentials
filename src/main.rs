@@ -4,6 +4,8 @@ mod ui;
 
 include!("./core/authentification.rs");
 
+use core::authentification;
+
 use ui::cli::run_cli;
 
 // #[async_std::main]
@@ -11,5 +13,5 @@ use ui::cli::run_cli;
 // }
 //
 fn main() {
-    run_cli();
+    authentification::generate_master_password_hash("test!");
 }
