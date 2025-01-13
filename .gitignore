@@ -12,3 +12,6 @@ target/
 # Mac proprietary format hidden file
 .DS_STORE
 
+# Sqlite-Db
+*.db
+

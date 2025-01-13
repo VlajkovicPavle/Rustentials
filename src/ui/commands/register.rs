@@ -1,11 +1,13 @@
 use crate::core::authentification;
 use crate::models::user;
 use crate::repository::services;
+use crate::ui::lang::langs::fetch_text;
 
 pub async fn register_user(username: &str) -> bool {
-    let password = rpassword::prompt_password("Your password: ").unwrap();
+    let password = rpassword::prompt_password(fetch_text("password_prompt")).unwrap();
     if authentification::validate_password(&password) {
-        let password_second_time = rpassword::prompt_password("Re-enter password: ").unwrap();
+        let password_second_time =
+            rpassword::prompt_password(fetch_text("password_confirmation")).unwrap();
         if password != password_second_time {
             return false;
         }
