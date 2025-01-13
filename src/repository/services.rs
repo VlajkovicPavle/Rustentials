@@ -25,7 +25,7 @@ pub async fn insert_credentials() {
     };
 }
 
-pub async fn insert_user(user_data: &user::User) {
+pub async fn insert_user(user_data: &user::User) -> bool {
     match fetch_db_instances().await {
         Ok(instances) => {
             let result = query(&fetch_insert_user_data_query())
@@ -34,10 +34,17 @@ pub async fn insert_user(user_data: &user::User) {
                 .execute(&instances)
                 .await;
             instances.close().await;
-            println!("{:?}", result);
+            match result {
+                Ok(_) => true,
+                Err(error) => {
+                    println!("Failed insert_user {}", error);
+                    false
+                }
+            }
         }
         Err(error) => {
-            panic!("Failed to fetch database instance! {}", error)
+            println!("Failed to fetch database instance {} ", error);
+            false
         }
-    };
+    }
 }

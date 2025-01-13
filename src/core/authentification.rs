@@ -11,7 +11,6 @@ pub fn validate_password(password: &str) -> bool {
     let lowercase_check = Regex::new(r"[a-z]").unwrap();
     let digit_check = Regex::new(r"[0-9]").unwrap();
     let special_check = Regex::new(r"[!@#$%^&*(),.?]").unwrap();
-
     length_check
         && uppercase_check.is_match(password.as_bytes())
         && lowercase_check.is_match(password.as_bytes())

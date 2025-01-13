@@ -55,15 +55,14 @@ pub async fn run_cli() {
     match arguments.command {
         Commands::Register { username } => {
             println!(
-                "   Password requirements:\n 
-                    Length >= 8 \n 
-                    One uppercase letter \n 
-                    One lowercase letter \n 
+                "   Password requirements: 
+                    Length >= 8 
+                    One uppercase letter  
+                    One lowercase letter  
                     One special character: !@#$%^&*(),.? 
                  "
             );
             if !register::register_user(&username).await {
-                println!("Either failed requirements or re-entering password");
                 println!("Failed to register!");
                 return;
             }

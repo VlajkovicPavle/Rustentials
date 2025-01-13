@@ -14,8 +14,7 @@ pub async fn register_user(username: &str) -> bool {
             username: username.to_string(),
             password_hash: password_hash.to_string(),
         };
-        services::insert_user(&user_data).await;
-        return true;
+        return services::insert_user(&user_data).await;
     }
     false
 }
