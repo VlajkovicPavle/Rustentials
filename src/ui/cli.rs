@@ -1,4 +1,4 @@
-use crate::ui::commands::register;
+use crate::ui::commands::{login, register};
 use clap::{builder::Str, Parser, Subcommand};
 use rpassword::prompt_password;
 
@@ -68,7 +68,13 @@ pub async fn run_cli() {
             }
             println!("Successfully registered!")
         }
-        Commands::Login { username, save } => {}
+        Commands::Login { username, save } => {
+            if login::login_user(&username).await {
+                println!("Successful login!");
+            } else {
+                println!("Failed login!")
+            }
+        }
         Commands::Yank { label, clipboard } => {}
         Commands::List {} => {}
         Commands::Save { label, username } => {}

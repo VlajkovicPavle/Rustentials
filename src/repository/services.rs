@@ -1,8 +1,10 @@
 use crate::models::user;
 use crate::repository::db::fetch_db_instances;
 use sqlx::query;
+use sqlx::query_scalar;
 include!("./queries/insert_credentials.rs");
 include!("./queries/insert_user_data.rs");
+include!("./queries/get_user_password_hash.rs");
 
 pub async fn insert_credentials() {
     let service_name = "facebook";
@@ -20,7 +22,7 @@ pub async fn insert_credentials() {
             println!("{:?}", result);
         }
         Err(error) => {
-            panic!("Failed to fetch database instance! {}", error)
+            println!("Failed to fetch database instance {} ", error);
         }
     };
 }
@@ -45,6 +47,29 @@ pub async fn insert_user(user_data: &user::User) -> bool {
         Err(error) => {
             println!("Failed to fetch database instance {} ", error);
             false
+        }
+    }
+}
+
+pub async fn fetch_user_password_hash(username: &str) -> Option<String> {
+    match fetch_db_instances().await {
+        Ok(instances) => {
+            let result = query_scalar::<_, String>(&(get_user_password_hash()))
+                .bind(username)
+                .fetch_one(&instances)
+                .await;
+            instances.close().await;
+            match result {
+                Ok(row) => Some(row),
+                Err(err) => {
+                    println!("Failed to fetch password hash {}", err);
+                    None
+                }
+            }
+        }
+        Err(error) => {
+            println!("Failed to fetch database instance {}", error);
+            None
         }
     }
 }

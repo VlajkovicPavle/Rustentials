@@ -29,3 +29,11 @@ pub fn generate_master_password_hash(password: &str) -> String {
     // assert!(Argon2::default().verify_password(password, &parsed_hash).is_ok());
     password_hash
 }
+
+pub fn verify_master_password(master_password_hash: &str, user_input_password: &str) -> bool {
+    let argon2 = Argon2::default();
+    let master_password_re_hashed = PasswordHash::new(master_password_hash).unwrap();
+    argon2
+        .verify_password(user_input_password.as_bytes(), &master_password_re_hashed)
+        .is_ok()
+}
