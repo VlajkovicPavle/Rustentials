@@ -3,7 +3,7 @@ use std::io::{self, Write};
 
 fn fetch_command_number_from_cli() -> u16 {
     let mut user_input = String::new();
-    print!("Input number of action: ");
+    print!("{}", fetch_text("ask_for_number_of_action"));
     io::stdout().flush().unwrap();
     io::stdin()
         .read_line(&mut user_input)
@@ -28,7 +28,7 @@ pub fn run_app() {
         println!("\n{}", fetch_text("menu_title"));
         println!("----------------------------");
         println!("1) {}", fetch_text("insert_credential"));
-        println!("2) Quit the app");
+        println!("2) {}", fetch_text("terminate_app"));
         if !choose_command() {
             break;
         }
