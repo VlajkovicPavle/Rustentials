@@ -7,7 +7,7 @@ const DATABASE_URL: &str = "sqlite://rustentials.db";
 async fn create_database(db_url: &str) {
     Sqlite::create_database(db_url).await.unwrap();
     match create_schema(db_url).await {
-        Ok(_) => println!("Database created successfully!"),
+        Ok(_) => println!("Database successfuly created!"),
         Err(e) => panic!("Failed to create database! {}", e),
     }
 }
@@ -25,9 +25,4 @@ pub async fn fetch_db_instances() -> Result<SqlitePool, sqlx::Error> {
     }
     let instances = SqlitePool::connect(DATABASE_URL).await.unwrap();
     Ok(instances)
-
-    // let qry = "INSERT INTO settings (description) VALUES($1)";
-    // let result = sqlx::query(&qry).bind("testing").execute(&instances).await;
-    // instances.close().await;
-    // println!("{:?}", result);
 }

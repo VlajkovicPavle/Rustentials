@@ -1,5 +1,6 @@
-use crate::core::authentification::authentificate_user;
-use clap::{Parser, Subcommand};
+use crate::ui::commands::register;
+use clap::{builder::Str, Parser, Subcommand};
+use rpassword::prompt_password;
 
 /// Simple program to greet a person
 #[derive(Debug, Parser)]
@@ -11,8 +12,15 @@ struct Cli {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
+    #[command(about = "Initiate register")]
+    Register {
+        #[arg(short = 'u', long = "username", help = "Desired username")]
+        username: String,
+    },
     #[command(about = "Initiate login")]
     Login {
+        #[arg(short = 'u', long = "username")]
+        username: String,
         #[arg(short = 's', long = "save", help = "Save the session")]
         save: bool,
     },
@@ -42,13 +50,25 @@ enum Commands {
     List {},
 }
 
-pub fn run_cli() {
+pub async fn run_cli() {
     let arguments = Cli::parse();
     match arguments.command {
-        Commands::Login { save } => {
-            let user_password = rpassword::prompt_password("Your password: ").unwrap();
-            authentificate_user(save, &user_password);
+        Commands::Register { username } => {
+            println!(
+                "   Password requirements: 
+                    Length >= 8 
+                    One uppercase letter  
+                    One lowercase letter  
+                    One special character: !@#$%^&*(),.? 
+                 "
+            );
+            if !register::register_user(&username).await {
+                println!("Failed to register!");
+                return;
+            }
+            println!("Successfully registered!")
         }
+        Commands::Login { username, save } => {}
         Commands::Yank { label, clipboard } => {}
         Commands::List {} => {}
         Commands::Save { label, username } => {}
