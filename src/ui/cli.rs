@@ -1,10 +1,11 @@
+use crate::ui::app::run_app;
 use crate::ui::commands::{login, register};
-use clap::{builder::Str, Parser, Subcommand};
-use rpassword::prompt_password;
+use crate::ui::lang::langs::fetch_text;
+use clap::{Parser, Subcommand};
 
 /// Simple program to greet a person
 #[derive(Debug, Parser)]
-#[command(version = "1.0.0", about = "Password manager", long_about = None)]
+#[command(version = "1.0.0", about = fetch_text("cli_about"), long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -12,71 +13,36 @@ struct Cli {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    #[command(about = "Initiate register")]
+    #[command(about = fetch_text("register_about"))]
     Register {
-        #[arg(short = 'u', long = "username", help = "Desired username")]
+        #[arg(short = 'u', long = fetch_text("register_username_long"), help = fetch_text("register_username_help"))]
         username: String,
     },
-    #[command(about = "Initiate login")]
+    #[command(about = fetch_text("login_about"))]
     Login {
-        #[arg(short = 'u', long = "username")]
-        username: String,
-        #[arg(short = 's', long = "save", help = "Save the session")]
-        save: bool,
-    },
-    #[command(about = "Save credentials")]
-    Save {
-        #[arg(short = 'l', long = "label", help = "Credential label")]
-        label: String,
-        #[arg(short = 'u', long = "username", help = "Credential username")]
+        #[arg(short = 'u', long = fetch_text("login_user"))]
         username: String,
     },
-    #[command(about = "Yank credentials by label")]
-    Yank {
-        #[arg(
-            short = 'l',
-            long = "label",
-            help = "Label that identifies credentials"
-        )]
-        label: String,
-        #[arg(
-            short = 'c',
-            long = "clipboard",
-            help = "Save credentials to clipboard"
-        )]
-        clipboard: bool,
-    },
-    #[command(about = "List all credential labels")]
-    List {},
 }
 
 pub async fn run_cli() {
     let arguments = Cli::parse();
     match arguments.command {
         Commands::Register { username } => {
-            println!(
-                "   Password requirements: 
-                    Length >= 8 
-                    One uppercase letter  
-                    One lowercase letter  
-                    One special character: !@#$%^&*(),.? 
-                 "
-            );
+            println!("{}", fetch_text("register_password_requirements"));
             if !register::register_user(&username).await {
-                println!("Failed to register!");
+                println!("{}", fetch_text("register_fail"));
                 return;
             }
-            println!("Successfully registered!")
+            println!("{}", fetch_text("register_ok"))
         }
-        Commands::Login { username, save } => {
+        Commands::Login { username } => {
             if login::login_user(&username).await {
-                println!("Successful login!");
+                println!("{}", fetch_text("login_ok"));
+                run_app();
             } else {
-                println!("Failed login!")
+                println!("{}", fetch_text("login_fail"))
             }
         }
-        Commands::Yank { label, clipboard } => {}
-        Commands::List {} => {}
-        Commands::Save { label, username } => {}
     }
 }
