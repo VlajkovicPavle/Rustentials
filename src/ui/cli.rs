@@ -1,3 +1,4 @@
+use crate::ui::app::run_app;
 use crate::ui::commands::{login, register};
 use crate::ui::lang::langs::fetch_text;
 use clap::{Parser, Subcommand};
@@ -38,6 +39,7 @@ pub async fn run_cli() {
         Commands::Login { username } => {
             if login::login_user(&username).await {
                 println!("{}", fetch_text("login_ok"));
+                run_app();
             } else {
                 println!("{}", fetch_text("login_fail"))
             }

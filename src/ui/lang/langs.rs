@@ -35,6 +35,9 @@ static LANGUAGE: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     dictionary.insert("listCredentials", "List all credential labels");
     dictionary.insert("greet", "Welcome to rustentials");
     dictionary.insert("menu_title", "Available commands:");
+    // Commands
+    dictionary.insert("list_all", "List all credentials label");
+    dictionary.insert("insert_credential", "Insert desired credential");
     dictionary
 });
 
