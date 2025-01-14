@@ -39,7 +39,7 @@ pub async fn run_cli() {
         Commands::Login { username } => {
             if login::login_user(&username).await {
                 println!("{}", fetch_text("login_ok"));
-                run_app(&username);
+                run_app(&username).await;
             } else {
                 println!("{}", fetch_text("login_fail"))
             }

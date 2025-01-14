@@ -14,7 +14,6 @@ fn fetch_command_number_from_cli() -> u16 {
     let number = user_input.trim().parse::<u16>().unwrap_or_default();
     number
 }
-
 async fn choose_command(username: &str) -> bool {
     let command_number = fetch_command_number_from_cli();
     match command_number {
@@ -26,7 +25,8 @@ async fn choose_command(username: &str) -> bool {
 
 pub async fn run_app(username: &str) {
     println!("\n============================");
-    println!("{}\n", fetch_text("greet"));
+    println!("{}", fetch_text("greet"));
+    println!("============================");
     loop {
         println!("\n{}", fetch_text("menu_title"));
         println!("----------------------------");
