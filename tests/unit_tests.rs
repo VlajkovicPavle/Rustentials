@@ -7,7 +7,7 @@ use rustentials::repository::db::{create_database, fetch_db_instances};
 use rustentials::repository::services::{fetch_user_password_hash, insert_user};
 
 // Authentification tests
-
+// ======================
 #[test]
 fn password_validator_test() {
     let mut test_password = "";
@@ -43,6 +43,7 @@ fn master_password_verify() {
 }
 
 // Database querries tests
+// ==========================
 #[async_std::test]
 async fn test_database_creation() {
     // Successful creation of database
@@ -59,7 +60,7 @@ async fn test_fetching_app_db_instance() {
 #[async_std::test]
 async fn test_inserting_user() {
     let test_user: User = User {
-        username: String::from("pavle"),
+        username: String::from("milos"),
         password_hash: String::from("asdasdd"),
     };
     assert!(insert_user(&test_user).await);
@@ -68,7 +69,7 @@ async fn test_inserting_user() {
 #[async_std::test]
 async fn test_fething_user_password() {
     let test_user: User = User {
-        username: String::from("luka"),
+        username: String::from("jakov"),
         password_hash: String::from("asdasdd"),
     };
     assert!(insert_user(&test_user).await);
