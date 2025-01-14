@@ -38,6 +38,14 @@ static LANGUAGE: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     // Commands
     dictionary.insert("list_all", "List all credentials label");
     dictionary.insert("insert_credential", "Insert desired credential");
+    dictionary.insert("ask_for_username", "Provide service username: ");
+    dictionary.insert("ask_for_label", "Provide service label: ");
+    dictionary.insert("ask_for_password", "Provide service password:");
+    dictionary.insert("credentials_added", "Successfully added credentials!");
+    dictionary.insert("credentials_failure_to_add", "Failure to add credentials");
+    dictionary.insert("ask_for_number_of_action", "Choose the number of action: ");
+    dictionary.insert("terminate_app", "Quit the app");
+
     dictionary
 });
 

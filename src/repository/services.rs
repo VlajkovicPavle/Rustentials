@@ -1,4 +1,5 @@
-use crate::models::user;
+use crate::models::credential::Credential;
+use crate::models::user::User;
 use crate::repository::db::fetch_db_instances;
 use sqlx::query;
 use sqlx::query_scalar;
@@ -6,28 +7,33 @@ include!("./queries/insert_credentials.rs");
 include!("./queries/insert_user_data.rs");
 include!("./queries/get_user_password_hash.rs");
 
-pub async fn insert_credentials() {
-    let service_name = "facebook";
-    let username = "pavle";
-    let password = "password";
+pub async fn insert_credentials(credential: &Credential, master_username: &str) -> bool {
     match fetch_db_instances().await {
         Ok(instances) => {
             let result = query(&fetch_insert_credentials_query())
-                .bind(service_name)
-                .bind(username)
-                .bind(password)
+                .bind(master_username)
+                .bind(&credential.username)
+                .bind(&credential.encrypted_password)
+                .bind(&credential.service_name)
                 .execute(&instances)
                 .await;
             instances.close().await;
-            println!("{:?}", result);
+            match result {
+                Ok(_) => true,
+                Err(error) => {
+                    println!("Failed to insert_credentials {}", error);
+                    false
+                }
+            }
         }
         Err(error) => {
             println!("Failed to fetch database instance {} ", error);
+            false
         }
-    };
+    }
 }
 
-pub async fn insert_user(user_data: &user::User) -> bool {
+pub async fn insert_user(user_data: &User) -> bool {
     match fetch_db_instances().await {
         Ok(instances) => {
             let result = query(&fetch_insert_user_data_query())

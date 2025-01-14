@@ -1,5 +1,8 @@
+use crate::ui::commands::insert_credentials;
 use crate::ui::lang::langs::fetch_text;
 use std::io::{self, Write};
+
+use super::commands::insert_credentials::insert_credentials;
 
 fn fetch_command_number_from_cli() -> u16 {
     let mut user_input = String::new();
@@ -11,25 +14,25 @@ fn fetch_command_number_from_cli() -> u16 {
     let number = user_input.trim().parse::<u16>().unwrap_or_default();
     number
 }
-
-fn choose_command() -> bool {
+async fn choose_command(username: &str) -> bool {
     let command_number = fetch_command_number_from_cli();
     match command_number {
-        1 => true,
+        1 => insert_credentials(username).await,
         2 => false,
         _ => false,
     }
 }
 
-pub fn run_app() {
+pub async fn run_app(username: &str) {
     println!("\n============================");
-    println!("{}\n", fetch_text("greet"));
+    println!("{}", fetch_text("greet"));
+    println!("============================");
     loop {
         println!("\n{}", fetch_text("menu_title"));
         println!("----------------------------");
         println!("1) {}", fetch_text("insert_credential"));
         println!("2) {}", fetch_text("terminate_app"));
-        if !choose_command() {
+        if !choose_command(username).await {
             break;
         }
     }
