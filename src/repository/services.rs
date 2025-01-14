@@ -7,11 +7,11 @@ include!("./queries/insert_credentials.rs");
 include!("./queries/insert_user_data.rs");
 include!("./queries/get_user_password_hash.rs");
 
-pub async fn insert_credentials(credential: &Credential, master_user: &User) -> bool {
+pub async fn insert_credentials(credential: &Credential, master_username: &str) -> bool {
     match fetch_db_instances().await {
         Ok(instances) => {
             let result = query(&fetch_insert_credentials_query())
-                .bind(&master_user.username)
+                .bind(master_username)
                 .bind(&credential.username)
                 .bind(&credential.encrypted_password)
                 .bind(&credential.service_name)
