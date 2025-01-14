@@ -2,9 +2,12 @@
 use rustentials::core::authentification::{
     generate_master_password_hash, validate_password, verify_master_password,
 };
+use rustentials::models::credential::Credential;
 use rustentials::models::user::User;
 use rustentials::repository::db::{create_database, fetch_db_instances};
-use rustentials::repository::services::{fetch_user_password_hash, insert_user};
+use rustentials::repository::services::{
+    fetch_user_password_hash, insert_credentials, insert_user,
+};
 
 // Authentification tests
 // ======================
@@ -76,4 +79,22 @@ async fn test_fething_user_password() {
     assert!(fetch_user_password_hash(&test_user.username)
         .await
         .is_some());
+}
+
+#[async_std::test]
+async fn test_inserting_credentials() {
+    let test_user: User = User {
+        username: String::from("ognjen"),
+        password_hash: String::from("asdasdd"),
+    };
+    assert!(insert_user(&test_user).await);
+    assert!(fetch_user_password_hash(&test_user.username)
+        .await
+        .is_some());
+    let test_credentials = Credential {
+        username: String::from("test_username"),
+        encrypted_password: String::from("asdasads"),
+        service_name: String::from("test_service_name"),
+    };
+    assert!(insert_credentials(&test_credentials, &test_user.username).await);
 }
