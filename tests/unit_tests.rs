@@ -79,6 +79,9 @@ async fn test_fething_user_password() {
     assert!(fetch_user_password_hash(&test_user.username)
         .await
         .is_some());
+    assert!(fetch_user_password_hash("non_existent_user")
+        .await
+        .is_none());
 }
 
 #[async_std::test]
@@ -97,4 +100,5 @@ async fn test_inserting_credentials() {
         service_name: String::from("test_service_name"),
     };
     assert!(insert_credentials(&test_credentials, &test_user.username).await);
+    assert!(!insert_credentials(&test_credentials, "non_existent_user").await);
 }
