@@ -4,11 +4,14 @@ include!("./queries/schema.rs");
 
 const DATABASE_URL: &str = "sqlite://rustentials.db";
 
-async fn create_database(db_url: &str) {
+pub async fn create_database(db_url: &str) -> bool {
     Sqlite::create_database(db_url).await.unwrap();
     match create_schema(db_url).await {
-        Ok(_) => println!("Database successfuly created!"),
-        Err(e) => panic!("Failed to create database! {}", e),
+        Ok(_) => {
+            println!("Database successfuly created!");
+            true
+        }
+        Err(_) => false,
     }
 }
 async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Error> {
@@ -20,8 +23,10 @@ async fn create_schema(db_url: &str) -> Result<SqliteQueryResult, sqlx::Error> {
 }
 
 pub async fn fetch_db_instances() -> Result<SqlitePool, sqlx::Error> {
-    if !Sqlite::database_exists(DATABASE_URL).await.unwrap_or(false) {
-        create_database(DATABASE_URL).await;
+    if !Sqlite::database_exists(DATABASE_URL).await.unwrap_or(false)
+        && !create_database(DATABASE_URL).await
+    {
+        panic!("Failed to create database");
     }
     let instances = SqlitePool::connect(DATABASE_URL).await.unwrap();
     Ok(instances)
