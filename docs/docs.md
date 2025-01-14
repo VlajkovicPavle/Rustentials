@@ -37,4 +37,12 @@ database should be in that folder aswell.
 Note:
 Once database is generated you can check content of it on some online tools by just taking `rustentials.db` and dropping it in some [online viewer](https://sqliteviewer.app/). 
 
+### Tests 
 
+Rustentials has working tests for testing database services and authentication of passwords.
+
+`/scripts` folder contains script to run tests, change the permission on it and run it.
+
+## Git actions 
+
+`Pre pull/push to Main branch` has action that runs the tests and confirms that all is good before merge/push!
