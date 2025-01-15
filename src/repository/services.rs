@@ -3,12 +3,12 @@ use crate::models::user::User;
 use crate::repository::db::fetch_db_instances;
 use sqlx::query;
 use sqlx::query_scalar;
-use sqlx::sqlite::SqliteRow;
 use sqlx::Row;
 include!("./queries/insert_credentials.rs");
 include!("./queries/insert_user_data.rs");
 include!("./queries/get_user_password_hash.rs");
 include!("./queries/get_credentials.rs");
+include!("./queries/get_all_credential_labels.rs");
 
 pub async fn insert_credentials(credential: &Credential, current_user: &User) -> bool {
     match fetch_db_instances().await {
@@ -54,6 +54,27 @@ pub async fn fetch_credentials(label: &str, current_user: &User) -> Option<Crede
                 label: credential_label,
             };
             Some(fetched_credential)
+        }
+        Err(error) => {
+            println!("Failed to fetch database instance {} ", error);
+            None
+        }
+    }
+}
+
+pub async fn fetch_all_credential_labels(current_user: &User) -> Option<Vec<String>> {
+    match fetch_db_instances().await {
+        Ok(instances) => {
+            let rows = query(&get_all_credential_labels_query())
+                .bind(&current_user.username)
+                .fetch_all(&instances)
+                .await
+                .unwrap();
+            let labels: Vec<String> = rows
+                .into_iter()
+                .map(|row| row.get::<String, _>("label"))
+                .collect();
+            Some(labels)
         }
         Err(error) => {
             println!("Failed to fetch database instance {} ", error);
