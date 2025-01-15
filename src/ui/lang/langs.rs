@@ -45,6 +45,7 @@ static LANGUAGE: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     dictionary.insert("credentials_failure_to_add", "Failure to add credentials");
     dictionary.insert("ask_for_number_of_action", "Choose the number of action: ");
     dictionary.insert("terminate_app", "Quit the app");
+    dictionary.insert("fetch_credentials", "Fetch credentials");
 
     dictionary
 });
