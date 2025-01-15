@@ -40,15 +40,11 @@ pub fn verify_master_password(master_password_hash: &str, user_input_password: &
 }
 
 pub fn generate_crypto_key(master_password: &str) -> [u8; 32] {
-    let salt = SaltString::generate(OsRng);
+    let salt = "salt_string";
     let mut output_key = [0u8; 32];
     let argon2 = Argon2::default();
     argon2
-        .hash_password_into(
-            master_password.as_bytes(),
-            salt.as_str().as_bytes(),
-            &mut output_key,
-        )
+        .hash_password_into(master_password.as_bytes(), salt.as_bytes(), &mut output_key)
         .expect("Failed to fetch crypto_key");
     output_key
 }
