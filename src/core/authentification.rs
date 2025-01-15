@@ -3,6 +3,7 @@ use argon2::{
     Argon2,
 };
 use regex::bytes::Regex;
+use simple_crypt::{decrypt, encrypt};
 const MINIMUM_PASSWORD_LENGTH: usize = 8;
 
 pub fn validate_password(password: &str) -> bool {
@@ -36,4 +37,26 @@ pub fn verify_master_password(master_password_hash: &str, user_input_password: &
     argon2
         .verify_password(user_input_password.as_bytes(), &master_password_re_hashed)
         .is_ok()
+}
+
+pub fn generate_crypto_key(master_password: &str) -> [u8; 32] {
+    let salt = SaltString::generate(OsRng);
+    let mut output_key = [0u8; 32];
+    let argon2 = Argon2::default();
+    argon2
+        .hash_password_into(
+            master_password.as_bytes(),
+            salt.as_str().as_bytes(),
+            &mut output_key,
+        )
+        .expect("Failed to fetch crypto_key");
+    output_key
+}
+
+pub fn encrypt_password(crypto_key: &[u8], password: &str) -> Vec<u8> {
+    encrypt(password.as_bytes(), crypto_key).expect("Failed to encrypt password")
+}
+
+pub fn decrypt_password(crypto_key: &[u8], encrypted_data: &[u8]) -> Vec<u8> {
+    decrypt(encrypted_data, crypto_key).expect("Failed to decrypt password")
 }

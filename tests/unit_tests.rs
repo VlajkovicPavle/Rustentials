@@ -1,6 +1,7 @@
 #[cfg(test)]
 use rustentials::core::authentification::{
-    generate_master_password_hash, validate_password, verify_master_password,
+    decrypt_password, encrypt_password, generate_crypto_key, generate_master_password_hash,
+    validate_password, verify_master_password,
 };
 use rustentials::models::credential::Credential;
 use rustentials::models::user::User;
@@ -45,6 +46,18 @@ fn master_password_verify() {
     ));
 }
 
+#[test]
+fn password_encryption_test() {
+    let crypto_key = generate_crypto_key("P@ssw0rd");
+    let test_password = "test_password";
+    let encrypted_password = encrypt_password(&crypto_key, test_password);
+    let decrypted_password = decrypt_password(&crypto_key, &encrypted_password);
+    assert_eq!(
+        test_password,
+        &String::from_utf8(decrypted_password).unwrap()
+    );
+}
+
 // Database querries tests
 // ==========================
 #[async_std::test]
@@ -65,6 +78,7 @@ async fn test_inserting_user() {
     let test_user: User = User {
         username: String::from("milos"),
         password_hash: String::from("asdasdd"),
+        master_key: None,
     };
     assert!(insert_user(&test_user).await);
 }
@@ -74,6 +88,7 @@ async fn test_fething_user_password() {
     let test_user: User = User {
         username: String::from("jakov"),
         password_hash: String::from("asdasdd"),
+        master_key: None,
     };
     assert!(insert_user(&test_user).await);
     assert!(fetch_user_password_hash(&test_user.username)
@@ -86,19 +101,24 @@ async fn test_fething_user_password() {
 
 #[async_std::test]
 async fn test_inserting_credentials() {
+    let master_user_password = "P@ssw0rd";
+    let master_user_key = generate_crypto_key(master_user_password);
     let test_user: User = User {
         username: String::from("ognjen"),
-        password_hash: String::from("asdasdd"),
+        password_hash: String::from(master_user_password),
+        master_key: Some(master_user_key),
     };
+    let service_password = "12356";
+    let encrypted_service_password =
+        encrypt_password(&test_user.master_key.unwrap(), service_password);
     assert!(insert_user(&test_user).await);
     assert!(fetch_user_password_hash(&test_user.username)
         .await
         .is_some());
     let test_credentials = Credential {
         username: String::from("test_username"),
-        encrypted_password: String::from("asdasads"),
+        encrypted_password: encrypted_service_password,
         service_name: String::from("test_service_name"),
     };
-    assert!(insert_credentials(&test_credentials, &test_user.username).await);
-    assert!(!insert_credentials(&test_credentials, "non_existent_user").await);
+    assert!(insert_credentials(&test_credentials, &test_user).await);
 }
