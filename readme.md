@@ -1,8 +1,7 @@
 ![image](https://img.shields.io/badge/Sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![image](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)
 
-# Rustling 
-
+# Rustentials
 A simple and secure command-line interface (CLI) password manager built with Rust. Store, retrieve, and manage your passwords safely with encryption.
 
 ## Features
