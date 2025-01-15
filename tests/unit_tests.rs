@@ -1,6 +1,7 @@
 #[cfg(test)]
 use rustentials::core::authentification::{
-    generate_master_password_hash, validate_password, verify_master_password,
+    decrypt_password, encrypt_password, generate_crypto_key, generate_master_password_hash,
+    validate_password, verify_master_password,
 };
 use rustentials::models::credential::Credential;
 use rustentials::models::user::User;
@@ -43,6 +44,18 @@ fn master_password_verify() {
         &master_password_hash,
         master_password
     ));
+}
+
+#[test]
+fn password_encryption_test() {
+    let crypto_key = generate_crypto_key("P@ssw0rd");
+    let test_password = "test_password";
+    let encrypted_password = encrypt_password(&crypto_key, test_password);
+    let decrypted_password = decrypt_password(&crypto_key, &encrypted_password);
+    assert_eq!(
+        test_password,
+        &String::from_utf8(decrypted_password).unwrap()
+    );
 }
 
 // Database querries tests
