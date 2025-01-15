@@ -78,6 +78,7 @@ async fn test_inserting_user() {
     let test_user: User = User {
         username: String::from("milos"),
         password_hash: String::from("asdasdd"),
+        master_key: None,
     };
     assert!(insert_user(&test_user).await);
 }
@@ -87,6 +88,7 @@ async fn test_fething_user_password() {
     let test_user: User = User {
         username: String::from("jakov"),
         password_hash: String::from("asdasdd"),
+        master_key: None,
     };
     assert!(insert_user(&test_user).await);
     assert!(fetch_user_password_hash(&test_user.username)
@@ -102,6 +104,7 @@ async fn test_inserting_credentials() {
     let test_user: User = User {
         username: String::from("ognjen"),
         password_hash: String::from("asdasdd"),
+        master_key: None,
     };
     assert!(insert_user(&test_user).await);
     assert!(fetch_user_password_hash(&test_user.username)
