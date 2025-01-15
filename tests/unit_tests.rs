@@ -118,7 +118,7 @@ async fn test_inserting_credentials() {
     let test_credentials = Credential {
         username: String::from("test_username"),
         encrypted_password: encrypted_service_password,
-        service_name: String::from("test_service_name"),
+        label: String::from("test_service_name"),
     };
     assert!(insert_credentials(&test_credentials, &test_user).await);
 }

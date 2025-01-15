@@ -26,7 +26,7 @@ pub async fn insert_credentials(current_user: &User) -> bool {
     let encrypted_password_arr = encrypt_password(&master_key, &service_password);
     let credentials = Credential {
         username: service_username,
-        service_name: service_label,
+        label: service_label,
         encrypted_password: encrypted_password_arr,
     };
     if services::insert_credentials(&credentials, current_user).await {

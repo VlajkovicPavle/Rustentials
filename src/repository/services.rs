@@ -14,7 +14,7 @@ pub async fn insert_credentials(credential: &Credential, current_user: &User) ->
                 .bind(&current_user.username)
                 .bind(&credential.username)
                 .bind(&credential.encrypted_password)
-                .bind(&credential.service_name)
+                .bind(&credential.label)
                 .execute(&instances)
                 .await;
             instances.close().await;
