@@ -3,9 +3,12 @@ use crate::models::user::User;
 use crate::repository::db::fetch_db_instances;
 use sqlx::query;
 use sqlx::query_scalar;
+use sqlx::sqlite::SqliteRow;
+use sqlx::Row;
 include!("./queries/insert_credentials.rs");
 include!("./queries/insert_user_data.rs");
 include!("./queries/get_user_password_hash.rs");
+include!("./queries/get_credentials.rs");
 
 pub async fn insert_credentials(credential: &Credential, current_user: &User) -> bool {
     match fetch_db_instances().await {
@@ -14,7 +17,7 @@ pub async fn insert_credentials(credential: &Credential, current_user: &User) ->
                 .bind(&current_user.username)
                 .bind(&credential.username)
                 .bind(&credential.encrypted_password)
-                .bind(&credential.service_name)
+                .bind(&credential.label)
                 .execute(&instances)
                 .await;
             instances.close().await;
@@ -29,6 +32,32 @@ pub async fn insert_credentials(credential: &Credential, current_user: &User) ->
         Err(error) => {
             println!("Failed to fetch database instance {} ", error);
             false
+        }
+    }
+}
+
+pub async fn fetch_credentials(label: &str, current_user: &User) -> Option<Credential> {
+    match fetch_db_instances().await {
+        Ok(instances) => {
+            let row = query(&get_credentials_query())
+                .bind(&current_user.username)
+                .bind(label)
+                .fetch_one(&instances)
+                .await
+                .unwrap();
+            let credential_username = row.get::<String, _>("username");
+            let credential_password = row.get::<Vec<u8>, _>("password");
+            let credential_label = row.get::<String, _>("label");
+            let fetched_credential = Credential {
+                username: credential_username,
+                encrypted_password: credential_password,
+                label: credential_label,
+            };
+            Some(fetched_credential)
+        }
+        Err(error) => {
+            println!("Failed to fetch database instance {} ", error);
+            None
         }
     }
 }

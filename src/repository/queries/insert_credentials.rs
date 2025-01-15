@@ -1,9 +1,9 @@
 fn fetch_insert_credentials_query() -> String {
     String::from(
         r#"
-            INSERT INTO credentials (user_id, username, password_hash, service_name)
+            INSERT INTO credentials (user_id, username, password, label)
             VALUES (
-                (SELECT id FROM users WHERE username = ?),  ?,  ?, ? 
+                (SELECT id FROM users WHERE username = ?),  LOWER(TRIM(?)),  ?, LOWER(TRIM(?)) 
             )
         "#,
     )

@@ -7,7 +7,7 @@ use rustentials::models::credential::Credential;
 use rustentials::models::user::User;
 use rustentials::repository::db::{create_database, fetch_db_instances};
 use rustentials::repository::services::{
-    fetch_user_password_hash, insert_credentials, insert_user,
+    fetch_credentials, fetch_user_password_hash, insert_credentials, insert_user,
 };
 
 // Authentification tests
@@ -118,7 +118,34 @@ async fn test_inserting_credentials() {
     let test_credentials = Credential {
         username: String::from("test_username"),
         encrypted_password: encrypted_service_password,
-        service_name: String::from("test_service_name"),
+        label: String::from("test_service_name"),
     };
     assert!(insert_credentials(&test_credentials, &test_user).await);
+}
+
+#[async_std::test]
+async fn test_fetching_credential() {
+    let master_user_password = "P@ssw0rd";
+    let master_user_key = generate_crypto_key(master_user_password);
+    let test_user: User = User {
+        username: String::from("katarina"),
+        password_hash: String::from(master_user_password),
+        master_key: Some(master_user_key),
+    };
+    let service_password = "12356";
+    let encrypted_service_password =
+        encrypt_password(&test_user.master_key.unwrap(), service_password);
+    assert!(insert_user(&test_user).await);
+    assert!(fetch_user_password_hash(&test_user.username)
+        .await
+        .is_some());
+    let test_credentials = Credential {
+        username: String::from("test_katarina"),
+        encrypted_password: encrypted_service_password,
+        label: String::from("test_katarina_service"),
+    };
+    assert!(insert_credentials(&test_credentials, &test_user).await);
+    assert!(fetch_credentials("test_katarina_service", &test_user)
+        .await
+        .is_some());
 }
