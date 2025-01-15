@@ -99,20 +99,26 @@ async fn test_fething_user_password() {
         .is_none());
 }
 
-// async fn test_inserting_credentials() {
-//     let test_user: User = User {
-//         username: String::from("ognjen"),
-//         password_hash: String::from("asdasdd"),
-//         master_key: None,
-//     };
-//     assert!(insert_user(&test_user).await);
-//     assert!(fetch_user_password_hash(&test_user.username)
-//         .await
-//         .is_some());
-//     let test_credentials = Credential {
-//         username: String::from("test_username"),
-//         encrypted_password: String::from("asdasads"),
-//         service_name: String::from("test_service_name"),
-//     };
-//     assert!(insert_credentials(&test_credentials, &test_user).await);
-// }
+#[async_std::test]
+async fn test_inserting_credentials() {
+    let master_user_password = "P@ssw0rd";
+    let master_user_key = generate_crypto_key(master_user_password);
+    let test_user: User = User {
+        username: String::from("ognjen"),
+        password_hash: String::from(master_user_password),
+        master_key: Some(master_user_key),
+    };
+    let service_password = "12356";
+    let encrypted_service_password =
+        encrypt_password(&test_user.master_key.unwrap(), service_password);
+    assert!(insert_user(&test_user).await);
+    assert!(fetch_user_password_hash(&test_user.username)
+        .await
+        .is_some());
+    let test_credentials = Credential {
+        username: String::from("test_username"),
+        encrypted_password: encrypted_service_password,
+        service_name: String::from("test_service_name"),
+    };
+    assert!(insert_credentials(&test_credentials, &test_user).await);
+}
