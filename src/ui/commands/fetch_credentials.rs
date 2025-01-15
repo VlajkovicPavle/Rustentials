@@ -21,7 +21,7 @@ pub async fn fetch_credentials(current_user: &User) -> bool {
                 Ok(password) => {
                     println!("\n***************************");
                     println!("Username: {}", credentials.username);
-                    println!("Passowrd : {}", password);
+                    println!("Password: {}", password);
                     println!("Label: {}", credentials.label);
                     println!("***************************");
                     true

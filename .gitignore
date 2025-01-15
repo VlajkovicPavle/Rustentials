@@ -13,5 +13,5 @@ target/
 .DS_STORE
 
 # Sqlite-Db
-*.db
+*.db*
 

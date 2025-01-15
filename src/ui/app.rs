@@ -2,7 +2,16 @@ use super::commands::insert_credentials::insert_credentials;
 use crate::models::user::User;
 use crate::ui::commands::fetch_credentials::fetch_credentials;
 use crate::ui::lang::langs::fetch_text;
-use std::io::{self, Write};
+use crossterm::cursor::MoveTo;
+use crossterm::execute;
+use crossterm::terminal::{Clear, ClearType};
+use std::io;
+use std::io::{stdout, Write};
+
+fn clear_terminal() {
+    execute!(stdout(), Clear(ClearType::FromCursorUp)).expect("Failed to clear terminal");
+    execute!(stdout(), MoveTo(0, 0)).expect("Failed to move cursor to top");
+}
 
 fn fetch_command_number_from_cli() -> u16 {
     let mut user_input = String::new();
@@ -16,6 +25,7 @@ fn fetch_command_number_from_cli() -> u16 {
 }
 async fn choose_command(current_user: &User) -> bool {
     let command_number = fetch_command_number_from_cli();
+    clear_terminal();
     match command_number {
         1 => insert_credentials(current_user).await,
         2 => fetch_credentials(current_user).await,
@@ -24,6 +34,7 @@ async fn choose_command(current_user: &User) -> bool {
 }
 
 pub async fn run_app(curent_user: &User) {
+    clear_terminal();
     println!("\n============================");
     println!("{}", fetch_text("greet"));
     println!("============================");
