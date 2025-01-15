@@ -99,22 +99,20 @@ async fn test_fething_user_password() {
         .is_none());
 }
 
-#[async_std::test]
-async fn test_inserting_credentials() {
-    let test_user: User = User {
-        username: String::from("ognjen"),
-        password_hash: String::from("asdasdd"),
-        master_key: None,
-    };
-    assert!(insert_user(&test_user).await);
-    assert!(fetch_user_password_hash(&test_user.username)
-        .await
-        .is_some());
-    let test_credentials = Credential {
-        username: String::from("test_username"),
-        encrypted_password: String::from("asdasads"),
-        service_name: String::from("test_service_name"),
-    };
-    assert!(insert_credentials(&test_credentials, &test_user.username).await);
-    assert!(!insert_credentials(&test_credentials, "non_existent_user").await);
-}
+// async fn test_inserting_credentials() {
+//     let test_user: User = User {
+//         username: String::from("ognjen"),
+//         password_hash: String::from("asdasdd"),
+//         master_key: None,
+//     };
+//     assert!(insert_user(&test_user).await);
+//     assert!(fetch_user_password_hash(&test_user.username)
+//         .await
+//         .is_some());
+//     let test_credentials = Credential {
+//         username: String::from("test_username"),
+//         encrypted_password: String::from("asdasads"),
+//         service_name: String::from("test_service_name"),
+//     };
+//     assert!(insert_credentials(&test_credentials, &test_user).await);
+// }

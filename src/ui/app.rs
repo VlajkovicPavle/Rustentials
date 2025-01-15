@@ -17,7 +17,7 @@ fn fetch_command_number_from_cli() -> u16 {
 async fn choose_command(current_user: &User) -> bool {
     let command_number = fetch_command_number_from_cli();
     match command_number {
-        1 => insert_credentials(&current_user.username).await,
+        1 => insert_credentials(current_user).await,
         2 => false,
         _ => false,
     }
