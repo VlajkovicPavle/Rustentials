@@ -9,6 +9,7 @@ include!("./queries/insert_user_data.rs");
 include!("./queries/get_user_password_hash.rs");
 include!("./queries/get_credentials.rs");
 include!("./queries/get_all_credential_labels.rs");
+include!("./queries/delete_credential.rs");
 
 pub async fn insert_credentials(credential: &Credential, current_user: &User) -> bool {
     match fetch_db_instances().await {
@@ -25,6 +26,30 @@ pub async fn insert_credentials(credential: &Credential, current_user: &User) ->
                 Ok(_) => true,
                 Err(error) => {
                     println!("Failed to insert_credentials {}", error);
+                    false
+                }
+            }
+        }
+        Err(error) => {
+            println!("Failed to fetch database instance {} ", error);
+            false
+        }
+    }
+}
+
+pub async fn delete_credentials(label: &str, current_user: &User) -> bool {
+    match fetch_db_instances().await {
+        Ok(instances) => {
+            let result = query(&get_delete_credentials_query())
+                .bind(&current_user.username)
+                .bind(label)
+                .execute(&instances)
+                .await;
+            instances.close().await;
+            match result {
+                Ok(_) => true,
+                Err(error) => {
+                    println!("Failed with error: {} ", error);
                     false
                 }
             }

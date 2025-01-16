@@ -1,5 +1,6 @@
 use super::commands::insert_credentials::insert_credentials;
 use crate::models::user::User;
+use crate::ui::commands::delete_credential::delete_credential;
 use crate::ui::commands::fetch_all_labels::fetch_all_labels;
 use crate::ui::commands::fetch_credentials::fetch_credentials;
 use crate::ui::lang::langs::fetch_text;
@@ -35,6 +36,7 @@ async fn choose_command(current_user: &User) -> bool {
         1 => insert_credentials(current_user).await,
         2 => fetch_credentials(current_user).await,
         3 => fetch_all_labels(current_user).await,
+        4 => delete_credential(current_user).await,
         _ => false,
     }
 }
@@ -51,7 +53,8 @@ pub async fn run_app(curent_user: &User) {
         println!("1) {}", fetch_text("insert_credential"));
         println!("2) {}", fetch_text("fetch_credentials"));
         println!("3) {}", fetch_text("fetch_labels"));
-        println!("4) {}", fetch_text("terminate_app"));
+        println!("4) {}", fetch_text("delete_credential"));
+        println!("5) {}", fetch_text("terminate_app"));
         if !choose_command(curent_user).await {
             break;
         }

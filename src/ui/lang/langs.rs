@@ -37,7 +37,7 @@ static LANGUAGE: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     dictionary.insert("menu_title", "Available commands:");
     // Commands
     dictionary.insert("list_all", "List all credentials label");
-    dictionary.insert("insert_credential", "Insert desired credential");
+    dictionary.insert("insert_credential", "Add credential");
     dictionary.insert("ask_for_username", "Provide service username: ");
     dictionary.insert("ask_for_label", "Provide service label: ");
     dictionary.insert("ask_for_password", "Provide service password:");
@@ -45,9 +45,18 @@ static LANGUAGE: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     dictionary.insert("credentials_failure_to_add", "Failure to add credentials");
     dictionary.insert("ask_for_number_of_action", "Choose the number of action: ");
     dictionary.insert("terminate_app", "Quit the app");
-    dictionary.insert("fetch_credentials", "Fetch credentials");
-    dictionary.insert("fetch_labels", "Fetch all labels");
+    dictionary.insert("fetch_credentials", "Fetch credential");
+    dictionary.insert("fetch_labels", "List all saved labels");
     dictionary.insert("fetch_labels_title", "List of all of the labels: ");
+    dictionary.insert("delete_credential", "Remove credential");
+    dictionary.insert(
+        "deletion_of_credential_ok",
+        "Successfful deleted credential!",
+    );
+    dictionary.insert(
+        "deletion_of_credential_fail",
+        "Failed to delete credential!",
+    );
 
     dictionary
 });
